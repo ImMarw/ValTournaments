@@ -1,0 +1,18 @@
+{block content}
+    <h2>Nadcházející turnaje</h2>
+
+    <div class="row">
+        {foreach $upcoming as $tournament}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img class="card-img-top" src="/images/{$tournament->image}" alt="{$tournament->name}">
+                    <div class="card-body">
+                        <h5 class="card-title">{$tournament->name}</h5>
+                        <p class="card-text">Region: {$tournament->region}</p>
+                        <p class="card-text"><small class="text-muted">Start: {$tournament->start_time|date:'j. n. Y H:i'}</small></p>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/block}
