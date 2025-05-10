@@ -1,0 +1,13 @@
+{layout '../../../templates/@layout.latte'}
+{block content}
+    <h2>{$team->name}</h2>
+
+    <img src="/images/{$team->logo}" alt="{$team->name}" class="img-fluid mb-3">
+
+    <h4>Členové týmu:</h4>
+    <ul>
+        {foreach $members as $member}
+            <li>{$member->ref('users', 'user_id')->username}</li>
+        {/foreach}
+    </ul>
+{/block}

@@ -1,0 +1,15 @@
+{layout '../../../templates/@layout.latte'}
+{block content}
+    {form signInForm}
+        <div class="mb-3">
+            {label username /}
+        {input username class=>"form-control"}
+        </div>
+        <div class="mb-3">
+            {label password /}
+        {input password class=>"form-control"}
+        </div>
+        <button class="btn btn-primary">{input send}</button>
+    {/form}
+
+{/block}

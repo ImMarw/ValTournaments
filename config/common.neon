@@ -30,3 +30,5 @@ services:
 	- App\Model\UserManager
 	- App\Model\MyAuthenticator
 	- App\Model\TournamentManager
+	- App\Model\TeamManager
+	- App\Model\ForumManager

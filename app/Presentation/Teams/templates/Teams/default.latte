@@ -1,0 +1,19 @@
+{layout '../../../templates/@layout.latte'}
+{block content}
+    <h2>Všechny týmy</h2>
+
+    <div class="row">
+        {foreach $teams as $team}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="/images/{$team->logo}" class="card-img-top" alt="{$team->name}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a n:href="Teams:detail id => $team->id">{$team->name}</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/block}

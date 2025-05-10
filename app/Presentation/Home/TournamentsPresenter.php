@@ -1,10 +1,10 @@
 <?php
 namespace App\Presentation\Home;
 
-use Nette;
 use App\Model\TournamentManager;
+use Nette;
 
-final class HomePresenter extends Nette\Application\UI\Presenter
+final class TournamentsPresenter extends Nette\Application\UI\Presenter
 {
     private TournamentManager $tournamentManager;
 
@@ -16,8 +16,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
     public function renderDefault(): void
     {
-        $this->template->upcoming = $this->tournamentManager->getUpcoming()->limit(5);
-        $this->template->finished = $this->tournamentManager->getFinished()->limit(5); // <-- TADY přidáno
+        // Získání všech turnajů
+        $this->template->tournaments = $this->tournamentManager->getAllTournaments();
     }
-
 }

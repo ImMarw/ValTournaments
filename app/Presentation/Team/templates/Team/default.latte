@@ -1,0 +1,23 @@
+{layout '../../../templates/@layout.latte'}
+
+{block content}
+    <h2>Vytvoření týmu</h2>
+
+    {if $user->isLoggedIn()}
+        <form n:name="createTeamForm" class="mt-3" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Název týmu</label>
+                <input type="text" n:name="name" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="logo" class="form-label">Logo týmu (nahrát obrázek)</label>
+                <input type="file" n:name="logo" class="form-control" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Vytvořit tým</button>
+        </form>
+    {else}
+        <p>Pro vytvoření týmu se prosím přihlas.</p>
+    {/if}
+{/block}

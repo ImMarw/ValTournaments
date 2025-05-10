@@ -1,18 +1,56 @@
-{block content}
-    <h2>Nadcházející turnaje</h2>
+{layout '../../../templates/@layout.latte'}
 
-    <div class="row">
-        {foreach $upcoming as $tournament}
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <img class="card-img-top" src="/images/{$tournament->image}" alt="{$tournament->name}">
-                    <div class="card-body">
-                        <h5 class="card-title">{$tournament->name}</h5>
-                        <p class="card-text">Region: {$tournament->region}</p>
-                        <p class="card-text"><small class="text-muted">Start: {$tournament->start_time|date:'j. n. Y H:i'}</small></p>
+{block content}
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">Valorant Turnaje</h1>
+            <p class="lead">Vítej na Valorant Turnajích. Tato stránka slouží jako přehled všech online Valorant turnajů. Sleduj nadcházející zápasy, registruj se svým týmem a získej skvělé ceny!</p>
+        </div>
+
+        <div class="row">
+            <!-- Left Column for Upcoming Tournaments -->
+            <div class="col-md-6">
+                <h3 class="text-primary text-center mb-4">Nejnovější nadcházející turnaje</h3>
+                {foreach $upcoming as $tournament}
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="row g-0">
+                            <div class="col-8 p-3">
+                                <div class="text-primary small fw-bold mb-1"><i class="bi bi-stopwatch"></i> Začátek</div>
+                                <h5 class="card-title mb-2 fw-bold">
+                                    <a href="{link Tournament:detail $tournament->id}" class="tournament-title-link text-decoration-none text-primary">{$tournament->name}</a>
+                                </h5>
+                                <div class="small text-muted"><i class="bi bi-calendar-event"></i> {$tournament->start_time|date:'j. n. Y H:i'}</div>
+                                <div class="small text-muted"><i class="bi bi-globe"></i> Region: {$tournament->region}</div>
+                            </div>
+                            <div class="col-4 d-flex align-items-center justify-content-center bg-light rounded-end">
+                                <img src="/images/flags/{$tournament->region|lower}.svg" alt="{$tournament->region}" class="img-fluid">
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {/foreach}
             </div>
-        {/foreach}
+
+            <!-- Right Column for Completed Tournaments -->
+            <div class="col-md-6">
+                <h3 class="text-muted text-center mb-4">Nejnovější dokončené turnaje</h3>
+                {foreach $finished as $tournament}
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="row g-0">
+                            <div class="col-8 p-3">
+                                <div class="text-muted small fw-bold mb-1"><i class="bi bi-check-circle"></i> Dokončeno</div>
+                                <h5 class="card-title mb-2 fw-bold">
+                                    <a href="{link Tournament:detail $tournament->id}" class="tournament-title-link text-decoration-none text-dark">{$tournament->name}</a>
+                                </h5>
+                                <div class="small text-muted"><i class="bi bi-calendar-check"></i> Start: {$tournament->start_time|date:'j. n. Y H:i'}</div>
+                                <div class="small text-muted"><i class="bi bi-globe"></i> Region: {$tournament->region}</div>
+                            </div>
+                            <div class="col-4 d-flex align-items-center justify-content-center bg-light rounded-end">
+                                <img src="/images/flags/{$tournament->region|lower}.svg" alt="{$tournament->region}" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        </div>
     </div>
 {/block}
