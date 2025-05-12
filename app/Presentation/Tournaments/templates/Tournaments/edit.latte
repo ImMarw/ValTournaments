@@ -1,0 +1,57 @@
+{layout '../../../templates/@layout.latte'}
+
+{block content}
+    <h1>{$title}</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <!-- bind the form component -->
+            <form n:name="tournamentForm" class="row g-3">
+                <input type="hidden" n:name="id" />
+
+                <div class="col-12">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" n:name="name" class="form-control" required />
+                </div>
+
+                <div class="col-12">
+                    <label for="start_at" class="form-label">Starts at (YYYY-MM-DD HH:MM)</label>
+                    <input type="text" id="start_at" n:name="start_at" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label for="team1" class="form-label">Team 1</label>
+                    <select id="team1" n:name="team1" class="form-select" required>
+                        <option value="">— pick team —</option>
+                        {foreach $form['team1']->items as $value => $label}
+                            <option n:if="$form['team1']->value == $value" selected value="{$value}">{$label}</option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="team2" class="form-label">Team 2</label>
+                    <select id="team2" n:name="team2" class="form-select" required>
+                        <option value="">— pick team —</option>
+                        {foreach $form['team2']->items as $value => $label}
+                            <option n:if="$form['team2']->value == $value" selected value="{$value}">{$label}</option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="logo" class="form-label">
+                        Logo {if !$form['id']->value}(required){/if}
+                    </label>
+                    <input type="file" id="logo" n:name="logo" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{/block}

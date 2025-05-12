@@ -1,0 +1,28 @@
+{layout '../../../templates/@layout.latte'}
+{block content}
+    <h1>{$tournament->name}</h1>
+    {if $isAdmin}
+        <a n:href="Tournaments:edit id => $tournament->id"
+                class="btn btn-sm btn-secondary mb-3">Edit</a>
+    {/if}
+    <div class="row">
+        <div class="col-md-6">
+            <h3>{$team1->name}</h3>
+            <img src="{$team1->logo}" style="max-width:100%">
+            <ul>
+                {foreach $team1->related('team_members')->fetchAll() as $m}
+                    <li>{$m->ref('user_id')->username}</li>
+                {/foreach}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>{$team2->name}</h3>
+            <img src="{$team2->logo}" style="max-width:100%">
+            <ul>
+                {foreach $team2->related('team_members')->fetchAll() as $m}
+                    <li>{$m->ref('user_id')->username}</li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+{/block}

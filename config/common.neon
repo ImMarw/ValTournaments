@@ -1,5 +1,5 @@
+# config/common.neon
 parameters:
-
 
 application:
 	errorPresenter:
@@ -7,28 +7,27 @@ application:
 		5xx: Error:Error5xx
 	mapping: App\Presentation\*\**Presenter
 
-
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=val_tournaments'
-	user: root
-	password: root
-
+  dsn:      'mysql:host=127.0.0.1;dbname=valtournaments2'
+  user:     root
+  password: root
 
 latte:
-	strictTypes: yes
-	strictParsing: yes
-	extensions:
-		- App\Presentation\Accessory\LatteExtension
-
+  strictTypes:   yes
+  strictParsing: yes
+  extensions:
+    - App\Presentation\Accessory\LatteExtension
 
 di:
-	export:
-		parameters: no
-		tags: no
+  export:
+    parameters: no
+    tags:       no
 
 services:
-	- App\Model\UserManager
-	- App\Model\MyAuthenticator
-	- App\Model\TournamentManager
-	- App\Model\TeamManager
-	- App\Model\ForumManager
+  - App\Model\UserAuthenticator
+  - App\Model\TeamRepository
+  - App\Model\InvitationRepository
+  - App\Model\ForumRepository
+  - App\Model\TournamentRepository
+  - App\Presentation\Tournaments\TournamentsPresenter
+  - App\Model\UserRepository

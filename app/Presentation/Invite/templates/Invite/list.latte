@@ -1,0 +1,18 @@
+{layout '../../../templates/@layout.latte'}
+{block content}
+    <h1>Notifications</h1>
+    {if !count($pending)}
+        <p>No pending invites.</p>
+    {else}
+        <ul>
+            {foreach $pending as $inv}
+                <li>
+                    You were invited to join team
+                    <strong>{$inv->team->name}</strong>.
+                    <a href="{link Invite:respond, $inv->token, do => 'accept'}">Accept</a> |
+                    <a href="{link Invite:respond, $inv->token, do => 'decline'}">Decline</a>
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+{/block}

@@ -1,44 +1,59 @@
 <?php
-declare(strict_types=1);
-
 namespace App\Core;
 
+use Nette;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
 
+// app/Core/RouterFactory.php
+
 final class RouterFactory
 {
-    public static function createRouter(): RouteList
+    public static function createRouter(): \Nette\Application\Routers\RouteList
     {
-        $router = new RouteList;
+        $router = new \Nette\Application\Routers\RouteList;
+        $router->addRoute('', 'Home:default');
 
-        $router->addRoute('login', 'Sign:login');
-        $router->addRoute('register', 'Sign:register');
-        $router->addRoute('logout', 'Sign:out');
+        // authentication
+        $router->addRoute('login',    'Login:default');
+        $router->addRoute('register', 'Register:default');
+        $router->addRoute('logout',   'Logout:default');
 
-        // Turnaje
-        $router->addRoute('tournaments', 'Tournament:Tournaments:default');
-        $router->addRoute('tournament/detail/<id>', [
-            'presenter' => 'Tournament',
-            'action' => 'detail',
-        ]);
-        $router->addRoute('tournament/create', 'Tournament:create');
+        $router->addRoute('teams',              'Teams:default');
+        $router->addRoute('team/create',        'Teams:create');
+        $router->addRoute('team/<id>',          'Teams:detail');
+        $router->addRoute('my-team',            'Teams:myTeam');
+        $router->addRoute('team/<id>/edit', 'Teams:edit');
 
-        // Týmy
-        $router->addRoute('teams', 'Teams:default');
-        $router->addRoute('team/create', 'Team:default');      // vytvoření týmu           // výpis týmů
-        $router->addRoute('team/<id>', 'Teams:detail');        // detail týmu
+        $router->addRoute('invitations',        'Invite:list');
+        $router->addRoute('invitation/<token>', 'Invite:respond');
 
-
-        // Fórum a admin
         $router->addRoute('forum', 'Forum:default');
-        $router->addRoute('forum/thread/<id>', 'Forum:thread');
-        $router->addRoute('forum/create-thread', 'Forum:createThread');
-        $router->addRoute('forum/post-reply/<id>', 'Forum:postReply');
-        $router->addRoute('admin', 'Admin:default');
+        $router->addRoute('forum/create', 'Forum:create');
+        $router->addRoute('forum/<id>', 'Forum:topic');
 
-        // Domovská stránka
-        $router->addRoute('<presenter>/<action>[/<id>]', 'Home:default');
+        $router->addRoute('tournaments', 'Tournaments:default');
+        $router->addRoute('tournaments/create', 'Tournaments:create');
+        $router->addRoute('tournaments/<id>/edit', 'Tournaments:edit');
+        $router->addRoute('tournaments/<id>', 'Tournaments:detail');
+
+        $router->addRoute('admin', [
+            'presenter' => 'Admin',
+            'action'    => 'default',
+        ]);
+
+        $router->addRoute('admin/users', [
+            'presenter' => 'Admin',
+            'action'    => 'users',
+        ]);
+        $router->addRoute('admin/teams', [
+            'presenter' => 'Admin',
+            'action'    => 'teams',
+        ]);
+        $router->addRoute('admin/tournaments', [
+            'presenter' => 'Admin',
+            'action'    => 'tournaments',
+        ]);
 
         return $router;
     }

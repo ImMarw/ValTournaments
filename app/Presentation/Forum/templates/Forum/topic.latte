@@ -1,0 +1,18 @@
+{layout '../../../templates/@layout.latte'}
+
+{block content}
+    <h1>{$topic->title}</h1>
+    <small>Started by {$topic->ref('user')->username}</small>
+    {control replyForm}
+
+    <ul class="list-group my-4">
+        {foreach $posts as $p}
+            <li class="list-group-item">
+                <p>{$p->content}</p>
+                <small class="text-muted">
+                    {$p->ref('user')->username} at {$p->created_at|date:'j. n. Y H:i'}
+                </small>
+            </li>
+        {/foreach}
+    </ul>
+{/block}

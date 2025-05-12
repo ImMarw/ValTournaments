@@ -1,23 +1,13 @@
 <?php
 namespace App\Presentation\Home;
 
-use Nette;
-use App\Model\TournamentManager;
+use Nette\Application\UI\Presenter;
 
-final class HomePresenter extends Nette\Application\UI\Presenter
+class HomePresenter extends Presenter
 {
-    private TournamentManager $tournamentManager;
-
-    public function __construct(TournamentManager $tournamentManager)
-    {
-        parent::__construct();
-        $this->tournamentManager = $tournamentManager;
-    }
-
     public function renderDefault(): void
     {
-        $this->template->upcoming = $this->tournamentManager->getUpcoming()->limit(5);
-        $this->template->finished = $this->tournamentManager->getFinished()->limit(5); // <-- TADY přidáno
+        // any data you want to pass to the template:
+        $this->template->title = 'Welcome to Valorant Tournaments';
     }
-
 }

@@ -1,0 +1,25 @@
+{layout '../../../templates/@layout.latte'}
+
+{block content}
+    <h1>All Tournaments</h1>
+    {if $isAdmin}
+        <a n:href="create" class="btn btn-primary mb-3">Create Tournament</a>
+    {/if}
+
+    <div class="row">
+        {foreach $tournaments as $t}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{$t->logo}" class="card-img-top" style="height:200px; object-fit:cover">
+                    <div class="card-body">
+                        <h5 class="card-title">{$t->name}</h5>
+                        <p class="card-text">
+                            Starts at {$t->starts_at|date:'j. n. Y H:i'}
+                        </p>
+                        <a n:href="detail, id => $t->id" class="btn btn-sm btn-secondary">View</a>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/block}

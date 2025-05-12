@@ -1,71 +1,91 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace App\Presentation\Forum;
 
-use Nette;
-use App\Model\ForumManager;
+use Nette\Application\UI\Form;
+use Nette\Application\UI\Presenter;
+use App\Model\ForumRepository;
 
-final class ForumPresenter extends Nette\Application\UI\Presenter
+final class ForumPresenter extends Presenter
 {
-    private ForumManager $forumManager;
+    private ForumRepository $forum;
 
-    public function __construct(ForumManager $forumManager)
+    public function __construct(ForumRepository $forum)
     {
         parent::__construct();
-        $this->forumManager = $forumManager;
+        $this->forum = $forum;
     }
 
+    // ── Topics list: GET /forum ───────────────────────
     public function renderDefault(): void
     {
-        $this->template->threads = $this->forumManager->getThreads();
+        $this->template->title  = 'Forum';
+        $this->template->topics = $this->forum->getAllTopics();
     }
 
-    public function renderThread(int $id): void
+    // ── New topic form: GET|POST /forum/create ───────
+    public function renderCreate(): void
     {
-        $thread = $this->forumManager->getThreadById($id);
-        if (!$thread) {
-            $this->error('Vlákno nenalezeno.');
-        }
-
-        $this->template->thread = $thread;
-        $this->template->posts = $this->forumManager->getPostsWithUsernames($id); // změna zde
+        $this->template->title       = 'New Topic';
+        $this->user->isLoggedIn() || $this->error(403);
     }
 
-    public function renderCreateThread(): void
+    protected function createComponentTopicForm(): Form
     {
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect('Sign:login');
-        }
-    }
+        $this->user->isLoggedIn() || $this->error(403);
 
-    protected function createComponentCreateThreadForm(): Nette\Application\UI\Form
-    {
-        $form = new Nette\Application\UI\Form;
-
-        $form->addText('title', 'Název vlákna:')->setRequired();
-        $form->addSubmit('send', 'Vytvořit vlákno');
-
-        $form->onSuccess[] = function ($form, $values): void {
-            $id = $this->forumManager->addThread($values->title, $this->getUser()->getId());
-            $this->redirect('Forum:thread', $id);
-        };
-
+        $form = new Form;
+        $form->addText('title', 'Topic title:')
+            ->setRequired();
+        $form->addSubmit('send', 'Create Topic');
+        $form->onSuccess[] = [$this, 'topicFormSucceeded'];
         return $form;
     }
 
-    protected function createComponentPostForm(): Nette\Application\UI\Form
+    public function topicFormSucceeded(Form $form, \stdClass $v): void
     {
-        $form = new Nette\Application\UI\Form;
+        $id = $this->forum->addTopic(
+            (int) $this->getUser()->getId(),
+            $v->title
+        );
+        $this->redirect('Forum:topic', $id);
+    }
 
-        $form->addTextArea('content', 'Text:')->setRequired();
-        $form->addSubmit('send', 'Odeslat');
+    // ── Show & post replies: GET|POST /forum/<id> ─────
+    public function renderTopic(int $id): void
+    {
+        $topic = $this->forum->getTopic($id)
+            ?? $this->error(404);
 
-        $form->onSuccess[] = function ($form, $values): void {
-            $threadId = $this->getParameter('id');
-            $this->forumManager->addPost($threadId, $values->content, $this->getUser()->getId());
-            $this->redirect('this');
-        };
+        $this->template->title = $topic->title;
+        $this->template->topic = $topic;
+        $this->template->posts = $this->forum->getPosts($id);
+    }
 
+    protected function createComponentReplyForm(): Form
+    {
+        $this->user->isLoggedIn() || $this->error(403);
+
+        $form = new Form;
+        $form->addTextArea('content', 'Your reply:')
+            ->setRequired();
+
+        // ← here
+        $form->addHidden('topicId')
+            ->setDefaultValue((string) $this->getParameter('id'));
+
+        $form->addSubmit('send', 'Post reply');
+        $form->onSuccess[] = [$this, 'replyFormSucceeded'];
         return $form;
     }
 
+    public function replyFormSucceeded(Form $form, \stdClass $v): void
+    {
+        $this->forum->addPost(
+            (int) $v->topicId,
+            (int) $this->getUser()->getId(),
+            $v->content
+        );
+        $this->redirect('this');
+    }
 }

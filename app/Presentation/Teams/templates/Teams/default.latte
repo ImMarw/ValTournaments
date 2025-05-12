@@ -1,19 +1,33 @@
 {layout '../../../templates/@layout.latte'}
-{block content}
-    <h2>Všechny týmy</h2>
 
-    <div class="row">
-        {foreach $teams as $team}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="/images/{$team->logo}" class="card-img-top" alt="{$team->name}">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a n:href="Teams:detail id => $team->id">{$team->name}</a>
-                        </h5>
+{block content}
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0"><i class="bi bi-people-fill me-2"></i>{$title}</h1>
+            {if $canCreate}
+                <a class="btn btn-success" n:href="Teams:create">
+                    <i class="bi bi-plus-lg me-1"></i>Create Team
+                </a>
+            {/if}
+        </div>
+
+        <div class="row g-4">
+            {foreach $teams as $team}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card h-100 text-center shadow-sm">
+                        <a class="stretched-link text-decoration-none text-reset"
+                                n:href="Teams:detail id => $team->id">
+                            <img src="{$basePath}{$team->logo}"
+                                 class="card-img-top img-thumbnail p-1"
+                                 alt="{$team->name}"
+                                 style="object-fit: cover; height: 180px;">
+                            <div class="card-body">
+                                <h5 class="card-title mb-0">{$team->name}</h5>
+                            </div>
+                        </a>
                     </div>
                 </div>
-            </div>
-        {/foreach}
+            {/foreach}
+        </div>
     </div>
 {/block}
