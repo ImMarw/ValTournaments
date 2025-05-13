@@ -1,115 +1,120 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1 class="mb-4">
-        <i class="bi bi-pencil-fill me-1"></i>
-        {$title}
-    </h1>
+    <div class="container py-4">
 
-    <div class="card mb-5 shadow-sm">
-        <div class="card-body">
+        <!-- Page title with icon -->
+        <div class="card bg-secondary text-white rounded-4 mb-4 p-4">
+            <h1 class="mb-0">
+                <i class="bi bi-pencil-fill me-2"></i>{$title}
+            </h1>
+        </div>
 
-            <!-- bind the form component -->
-            <form n:name="tournamentForm" class="row g-3">
-                <input type="hidden" n:name="id" />
+        <!-- Form card -->
+        <div class="card bg-dark text-white rounded-4 shadow-sm mb-5">
+            <div class="card-body">
 
-                <!-- Name -->
-                <div class="col-12">
-                    <label for="name" class="form-label">
-                        <i class="bi bi-card-text me-1"></i>Name
-                    </label>
-                    <input
-                            type="text"
-                            id="name"
-                            n:name="name"
-                            class="form-control"
-                            required
-                    />
-                </div>
+                <!-- Tournament form -->
+                <form n:name="tournamentForm" class="row g-3">
+                    <input type="hidden" n:name="id" />
 
-                <!-- Starts At -->
-                <div class="col-12">
-                    <label for="start_at" class="form-label">
-                        <i class="bi bi-clock-fill me-1"></i>
-                        Starts at <small class="text-muted">(YYYY-MM-DD HH:MM)</small>
-                    </label>
-                    <input
-                            type="text"
-                            id="start_at"
-                            n:name="start_at"
-                            class="form-control"
-                            required
-                    />
-                </div>
+                    <!-- Name -->
+                    <div class="col-12">
+                        <label for="name" class="form-label text-white">
+                            <i class="bi bi-card-text me-1"></i>Name
+                        </label>
+                        <input
+                                type="text"
+                                id="name"
+                                n:name="name"
+                                class="form-control text-black border-0 rounded-3"
+                                required
+                        />
+                    </div>
 
-                <!-- Team 1 -->
-                <div class="col-md-6">
-                    <label for="team1" class="form-label">
-                        <i class="bi bi-people-fill me-1"></i>Team 1
-                    </label>
-                    <select
-                            id="team1"
-                            n:name="team1"
-                            class="form-select"
-                            required
-                    >
-                        <option value="">— pick team —</option>
-                        {foreach $form['team1']->items as $value => $label}
-                            <option
-                                    n:if="$form['team1']->value == $value"
-                                    selected
-                                    value="{$value}"
-                            >{$label}</option>
-                        {/foreach}
-                    </select>
-                </div>
+                    <!-- Starts At -->
+                    <div class="col-12">
+                        <label for="start_at" class="form-label text-white">
+                            <i class="bi bi-clock-fill me-1"></i>
+                            Starts at <small class="text-muted">(YYYY-MM-DD HH:MM)</small>
+                        </label>
+                        <input
+                                type="text"
+                                id="start_at"
+                                n:name="start_at"
+                                class="form-control text-black border-0 rounded-3"
+                                required
+                        />
+                    </div>
 
-                <!-- Team 2 -->
-                <div class="col-md-6">
-                    <label for="team2" class="form-label">
-                        <i class="bi bi-people-fill me-1"></i>Team 2
-                    </label>
-                    <select
-                            id="team2"
-                            n:name="team2"
-                            class="form-select"
-                            required
-                    >
-                        <option value="">— pick team —</option>
-                        {foreach $form['team2']->items as $value => $label}
-                            <option
-                                    n:if="$form['team2']->value == $value"
-                                    selected
-                                    value="{$value}"
-                            >{$label}</option>
-                        {/foreach}
-                    </select>
-                </div>
+                    <!-- Team 1 -->
+                    <div class="col-md-6">
+                        <label for="team1" class="form-label text-white">
+                            <i class="bi bi-people-fill me-1"></i>Team 1
+                        </label>
+                        <select
+                                id="team1"
+                                n:name="team1"
+                                class="form-select text-black border-0 rounded-3"
+                                required
+                        >
+                            <option value="">— pick team —</option>
+                            {foreach $form['team1']->items as $value => $label}
+                                <option
+                                        n:if="$form['team1']->value == $value"
+                                        selected
+                                        value="{$value}"
+                                >{$label}</option>
+                            {/foreach}
+                        </select>
+                    </div>
 
-                <!-- Logo -->
-                <div class="col-12">
-                    <label for="logo" class="form-label">
-                        <i class="bi bi-card-image me-1"></i>Logo
-                        {if !$form['id']->value}
-                            <span class="text-muted">(required)</span>
-                        {/if}
-                    </label>
-                    <input
-                            type="file"
-                            id="logo"
-                            n:name="logo"
-                            class="form-control"
-                    />
-                </div>
+                    <!-- Team 2 -->
+                    <div class="col-md-6">
+                        <label for="team2" class="form-label text-white">
+                            <i class="bi bi-people-fill me-1"></i>Team 2
+                        </label>
+                        <select
+                                id="team2"
+                                n:name="team2"
+                                class="form-select text-black border-0 rounded-3"
+                                required
+                        >
+                            <option value="">— pick team —</option>
+                            {foreach $form['team2']->items as $value => $label}
+                                <option
+                                        n:if="$form['team2']->value == $value"
+                                        selected
+                                        value="{$value}"
+                                >{$label}</option>
+                            {/foreach}
+                        </select>
+                    </div>
 
-                <!-- Save button (aligned left) -->
-                <div class="col-12 text-start">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check2 me-1"></i>Save changes
-                    </button>
-                </div>
-            </form>
+                    <!-- Logo -->
+                    <div class="col-12">
+                        <label for="logo" class="form-label text-white">
+                            <i class="bi bi-card-image me-1"></i>Logo
+                            {if !$form['id']->value}
+                                <span class="text-muted">(required)</span>
+                            {/if}
+                        </label>
+                        <input
+                                type="file"
+                                id="logo"
+                                n:name="logo"
+                                class="form-control text-black border-0 rounded-3"
+                        />
+                    </div>
 
+                    <!-- Save changes -->
+                    <div class="col-12 text-start">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check2 me-1"></i>Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {/block}

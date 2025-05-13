@@ -36,9 +36,6 @@ final class TeamsPresenter extends Presenter
 
     protected function createComponentCreateTeamForm(): Form
     {
-        if (! $this->getUser()->isLoggedIn()) {
-            $this->error(403);
-        }
 
         $form = new Form;
         $form->addText('name', 'Team name:')
@@ -185,9 +182,6 @@ final class TeamsPresenter extends Presenter
         $team = $this->teams->fetchById($id);
         if (! $team) {
             $this->error('Team not found', 404);
-        }
-        if ((int)$this->getUser()->getId() !== $team->owner_id) {
-            $this->error('Access denied', 403);
         }
         $this->template->team = $team;
     }

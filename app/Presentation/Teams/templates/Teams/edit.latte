@@ -1,51 +1,65 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1 class="mb-4">Edit “{$team->name}”</h1>
+    <div class="container py-4">
 
-    <div class="card mb-5 shadow-sm">
-        <div class="card-body">
-
-            <!-- bind the form component -->
-            <form n:name="editTeamForm" class="row g-3">
-                <input type="hidden" n:name="id" />
-
-                <!-- Team Name -->
-                <div class="col-12">
-                    <label for="team-name" class="form-label">
-                        <i class="bi bi-flag-fill me-1"></i>Team Name
-                    </label>
-                    <input
-                            type="text"
-                            id="team-name"
-                            n:name="name"
-                            class="form-control"
-                            required
-                    />
-                </div>
-
-                <!-- Logo Upload -->
-                <div class="col-12">
-                    <label for="team-logo" class="form-label">
-                        <i class="bi bi-card-image me-1"></i>Logo
-                        {if !$form['id']->value}<span class="text-muted">(required)</span>{/if}
-                    </label>
-                    <input
-                            type="file"
-                            id="team-logo"
-                            n:name="logo"
-                            class="form-control"
-                    />
-                </div>
-
-                <!-- Submit Button -->
-                <div class="col-12 text-start">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save2 me-1"></i>Save changes
-                    </button>
-                </div>
-            </form>
-
+        <!-- Page title -->
+        <div class="card bg-secondary text-white rounded-4 mb-4 p-4">
+            <h1 class="mb-0">
+                <i class="bi bi-pencil-square me-2"></i>Edit “{$team->name}”
+            </h1>
         </div>
+
+        <!-- Edit Team Card -->
+        <div class="card bg-dark text-white rounded-4 shadow-sm mb-5">
+            <div class="card-body">
+
+                <!-- Team form -->
+                <form n:name="editTeamForm" class="row g-3">
+
+                    <input type="hidden" n:name="id" />
+
+                    <!-- Team Name -->
+                    <div class="col-12">
+                        <label for="team-name" class="form-label text-white">
+                            <i class="bi bi-flag-fill me-1"></i>Team Name
+                        </label>
+                        <input
+                                type="text"
+                                id="team-name"
+                                n:name="name"
+                                class="form-control text-black border-0 rounded-3"
+                                placeholder="Enter team name"
+                                required
+                        />
+                    </div>
+
+                    <!-- Logo Upload -->
+                    <div class="col-12">
+                        <label for="team-logo" class="form-label text-white">
+                            <i class="bi bi-card-image me-1"></i>Logo
+                            {if !$form['id']->value}
+                                <span class="text-muted">(required)</span>
+                            {/if}
+                        </label>
+                        <input
+                                type="file"
+                                id="team-logo"
+                                n:name="logo"
+                                class="form-control text-black border-0 rounded-3"
+                        />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-12 text-start">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save2 me-1"></i>Save changes
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
     </div>
 {/block}
