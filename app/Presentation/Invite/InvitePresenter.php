@@ -25,9 +25,12 @@ final class InvitePresenter extends Nette\Application\UI\Presenter
     public function renderList(): void
     {
         $this->template->title   = 'My Invitations';
-        $this->template->pending = $this->invites
+        $pending = $this->invites
             ->pendingFor($this->getUser()->identity->email)
             ->fetchAll();
+
+        $this->template->pending      = $pending;
+        $this->template->pendingCount = count($pending);
     }
 
     // ── 6) /invitation/<token>?accept or ?decline ───────────────────────────

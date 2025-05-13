@@ -11,12 +11,32 @@ class LoginPresenter extends Nette\Application\UI\Presenter
     protected function createComponentLoginForm(): Form
     {
         $form = new Form;
+
+        $renderer = $form->getRenderer();
+        $renderer->wrappers['pair']['container'] = 'mb-3';
+
+        // ─── BOOTSTRAP RENDERER CONFIG ────────────────────────────────────────────────
+        $renderer = $form->getRenderer();
+        $renderer->wrappers['controls']['container']      = null;
+        $renderer->wrappers['pair']['container']          = 'mb-3';
+        $renderer->wrappers['label']['container']         = '';
+        $renderer->wrappers['control']['container']       = '';
+        $renderer->wrappers['control']['description']     = 'form-text text-muted';
+        $renderer->wrappers['control']['errorcontainer']  = 'invalid-feedback';
+        // ─────────────────────────────────────────────────────────────────────────────
+
+        // now build your form as usual:
         $form->addText('email', 'Email:')
-            ->setType('email')
-            ->setRequired('Please enter your email.');
-        $form->addPassword('password', 'Password:')
-            ->setRequired('Please enter your password.');
-        $form->addSubmit('send', 'Log in');
+            ->setHtmlAttribute('class','form-control mb-2')
+            ->setRequired();
+        $form->addPassword('password','Password:')
+            ->setHtmlAttribute('class','form-control mb-2')
+            ->setRequired();
+        $form->addCheckbox('remember','Keep me logged in')
+            ->setHtmlAttribute('class','form-check-input mb-4');
+        $form->addSubmit('send','Log in')
+            ->setHtmlAttribute('class','btn btn-primary w-100');
+
         $form->onSuccess[] = [$this, 'loginFormSucceeded'];
         return $form;
     }

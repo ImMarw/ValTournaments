@@ -20,29 +20,49 @@ class RegisterPresenter extends Nette\Application\UI\Presenter
     {
         $form = new Form;
 
+        $renderer = $form->getRenderer();
+        $renderer->wrappers['pair']['container'] = 'mb-5';
+
+        // ─── 2) Bootstrap‐style renderer configuration ─────────────────────
+        $renderer = $form->getRenderer();
+        $renderer->wrappers['controls']['container']     = null;
+        $renderer->wrappers['pair']['container']         = 'mb-3';
+        $renderer->wrappers['label']['container']        = '';
+        $renderer->wrappers['control']['container']      = '';
+        $renderer->wrappers['control']['description']    = 'form-text text-muted';
+        $renderer->wrappers['control']['errorcontainer'] = 'invalid-feedback';
+        // ──────────────────────────────────────────────────────────────────
+
+        // ─── 3) Build the fields ───────────────────────────────────────────
         $form->addText('email', 'Email:')
-            ->setType('email')
+            ->setHtmlAttribute('class','form-control mb-2')
             ->setRequired('Please enter your email.')
             ->addRule(Form::EMAIL, 'Enter a valid email.');
 
-        // ← New username field
         $form->addText('username', 'Username:')
+            ->setHtmlAttribute('class','form-control mb-2')
             ->setRequired('Please choose a username.')
-            ->addRule(Form::MIN_LENGTH, 'Username must be at least %d characters.', 3)
-            ->addRule(Form::PATTERN, 'Username may contain only letters, numbers and underscores.', '^[A-Za-z0-9_]+$');
+            ->addRule(Form::MIN_LENGTH, 'At least %d characters.', 3)
+            ->addRule(Form::PATTERN, 'Only letters, numbers, and underscores.', '^[A-Za-z0-9_]+$');
 
         $form->addPassword('password', 'Password:')
+            ->setHtmlAttribute('class','form-control mb-2')
             ->setRequired('Please enter a password.')
-            ->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters', 6);
+            ->addRule(Form::MIN_LENGTH, 'At least %d characters.', 6);
 
         $form->addPassword('passwordVerify', 'Confirm Password:')
-            ->setRequired('Confirm your password.')
+            ->setHtmlAttribute('class','form-control mb-4')
+            ->setRequired('Please confirm your password.')
             ->addRule(Form::EQUAL, 'Passwords do not match.', $form['password']);
 
-        $form->addSubmit('send', 'Sign up');
+        // ─── 4) Big blue submit button ────────────────────────────────────
+        $form->addSubmit('send', 'Sign up')
+            ->setHtmlAttribute('class', 'btn btn-success btn-lg w-100');
+
         $form->onSuccess[] = [$this, 'registerFormSucceeded'];
         return $form;
     }
+
 
     public function registerFormSucceeded(Form $form, \stdClass $values): void
     {

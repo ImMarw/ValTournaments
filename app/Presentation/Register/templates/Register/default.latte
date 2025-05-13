@@ -1,6 +1,27 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1>{$title}</h1>
-    {control registerForm}
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-sm" style="width: 100%; max-width: 400px;">
+            <div class="card-body p-4">
+
+                <!-- Logo / Title -->
+                <div class="text-center mb-4">
+                    <h5 class="card-title">{$title}</h5>
+                </div>
+
+                <!-- Actual form -->
+                {control registerForm}
+
+                <!-- Footer link -->
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        Already have an account?
+                        <a href="{link Login:default}">Log in</a>
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
 {/block}

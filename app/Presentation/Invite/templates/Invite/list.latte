@@ -1,18 +1,57 @@
 {layout '../../../templates/@layout.latte'}
+
 {block content}
-    <h1>Notifications</h1>
-    {if !count($pending)}
-        <p>No pending invites.</p>
-    {else}
-        <ul>
-            {foreach $pending as $inv}
-                <li>
-                    You were invited to join team
-                    <strong>{$inv->team->name}</strong>.
-                    <a href="{link Invite:respond, $inv->token, do => 'accept'}">Accept</a> |
-                    <a href="{link Invite:respond, $inv->token, do => 'decline'}">Decline</a>
-                </li>
-            {/foreach}
-        </ul>
-    {/if}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h3 class="mb-0">
+                            <i class="bi bi-bell-fill me-2"></i>
+                            Notifications
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        {if !count($pending)}
+                            <div class="alert alert-info mb-0">
+                                <i class="bi bi-info-circle-fill me-1"></i>
+                                You have no pending invites.
+                            </div>
+
+                        {else}
+                            <ul class="list-group">
+                                {foreach $pending as $inv}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-person-plus-fill text-primary me-2"></i>
+                                            You were invited to join team
+                                            <strong>{$inv->team->name}</strong>.
+                                        </div>
+                                        <div class="btn-group btn-group-sm">
+                                            <a
+                                                    href="{link Invite:respond, $inv->token, do => 'accept'}"
+                                                    class="btn btn-success rounded me-2"
+                                            >
+                                                <i class="bi bi-check2 me-1"></i>Accept
+                                            </a>
+                                            <a
+                                                    href="{link Invite:respond, $inv->token, do => 'decline'}"
+                                                    class="btn btn-danger rounded"
+                                            >
+                                                <i class="bi bi-x-lg me-1"></i>Decline
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        {/if}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 {/block}

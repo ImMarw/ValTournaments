@@ -1,28 +1,110 @@
 {layout '../../../templates/@layout.latte'}
+
 {block content}
-    <h1>{$tournament->name}</h1>
-    {if $isAdmin}
-        <a n:href="Tournaments:edit id => $tournament->id"
-                class="btn btn-sm btn-secondary mb-3">Edit</a>
-    {/if}
-    <div class="row">
-        <div class="col-md-6">
-            <h3>{$team1->name}</h3>
-            <img src="{$team1->logo}" style="max-width:100%">
-            <ul>
-                {foreach $team1->related('team_members')->fetchAll() as $m}
-                    <li>{$m->ref('user_id')->username}</li>
-                {/foreach}
-            </ul>
+    <div class="container py-5">
+
+        <!-- Tournament title centered -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold display-5">
+                <i class="bi bi-trophy-fill me-2"></i>{$tournament->name}
+            </h1>
+            {if $isAdmin}
+                <a n:href="edit id => $tournament->id" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-pencil-fill me-1"></i>Edit Tournament
+                </a>
+            {/if}
         </div>
-        <div class="col-md-6">
-            <h3>{$team2->name}</h3>
-            <img src="{$team2->logo}" style="max-width:100%">
-            <ul>
-                {foreach $team2->related('team_members')->fetchAll() as $m}
-                    <li>{$m->ref('user_id')->username}</li>
-                {/foreach}
-            </ul>
+
+        <!-- Teams row -->
+        <div class="row justify-content-center align-items-start gx-5">
+
+            <!-- Team 1 -->
+            <div class="col-12 col-md-5 text-center">
+                <img
+                        src="{$basePath}{$team1->logo}"
+                        alt="{$team1->name} logo"
+                        class="rounded-circle mb-3"
+                        style="width:180px; height:180px; object-fit:cover;"
+                >
+                <h4 class="fw-semibold fs-4">{$team1->name}</h4>
+                {if $leader1}
+                    <div class="mb-3">
+          <span class="badge bg-primary align-middle">
+            <i class="bi bi-star-fill me-1"></i>Leader: {$leader1->username}
+          </span>
+                    </div>
+                {/if}
+
+                <!-- Members dropdown -->
+                <div class="dropdown mb-3">
+                    <button
+                            class="btn btn-light dropdown-toggle"
+                            type="button"
+                            id="dropdownTeam1Members"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
+                        <i class="bi bi-people-fill me-1 text-dark"></i>
+                        <span class="fw-bold text-dark">Members</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownTeam1Members">
+                        {foreach $team1->related('team_members')->fetchAll() as $m}
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-person-fill me-2"></i>{$m->ref('user_id')->username}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="col-12 col-md-1 d-none d-md-flex justify-content-center">
+                <div style="width:2px; height:260px; background:#dee2e6;"></div>
+            </div>
+
+            <!-- Team 2 -->
+            <div class="col-12 col-md-5 text-center">
+                <img
+                        src="{$basePath}{$team2->logo}"
+                        alt="{$team2->name} logo"
+                        class="rounded-circle mb-3"
+                        style="width:180px; height:180px; object-fit:cover;"
+                >
+                <h4 class="fw-semibold fs-4">{$team2->name}</h4>
+                {if $leader2}
+                    <div class="mb-3">
+          <span class="badge bg-primary align-middle">
+            <i class="bi bi-star-fill me-1"></i>Leader: {$leader2->username}
+          </span>
+                    </div>
+                {/if}
+
+                <!-- Members dropdown -->
+                <div class="dropdown mb-3">
+                    <button
+                            class="btn btn-light dropdown-toggle"
+                            type="button"
+                            id="dropdownTeam2Members"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
+                        <i class="bi bi-people-fill me-1 text-dark"></i>
+                        <span class="fw-bold text-dark">Members</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownTeam2Members">
+                        {foreach $team2->related('team_members')->fetchAll() as $m}
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-person-fill me-2"></i>{$m->ref('user_id')->username}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
 {/block}

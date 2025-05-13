@@ -8,7 +8,7 @@ use Nette\Http\FileUpload;
 use App\Model\TournamentRepository;
 use App\Model\TeamRepository;
 
-final class TournamentsPresenter extends Nette\Application\UI\Presenter
+final class     TournamentsPresenter extends Nette\Application\UI\Presenter
 {
     public function __construct(
         private TournamentRepository $tournaments,
@@ -35,14 +35,23 @@ final class TournamentsPresenter extends Nette\Application\UI\Presenter
             ?? $this->error(404);
 
         // load both teams directly
-        $team1 = $this->teams->fetchById((int) $t->team1_id);
-        $team2 = $this->teams->fetchById((int) $t->team2_id);
+        $team1 = $this->teams->fetchById((int)$t->team1_id);
+        $team2 = $this->teams->fetchById((int)$t->team2_id);
 
-        $this->template->title      = $t->name;
+        $this->template->title = $t->name;
         $this->template->tournament = $t;
-        $this->template->team1      = $team1;
-        $this->template->team2      = $team2;
-        $this->template->isAdmin    = $this->getUser()->isInRole('admin');
+        $this->template->team1 = $team1;
+        $this->template->team2 = $team2;
+        $this->template->isAdmin = $this->getUser()->isInRole('admin');
+
+        // fetch each team’s owner (assuming teams.owner_id FK → users.id)
+        // you'll get an ActiveRow for the user
+        $this->template->leader1 = $team1
+            ? $team1->ref('users', 'owner_id')
+            : null;
+        $this->template->leader2 = $team2
+            ? $team2->ref('users', 'owner_id')
+            : null;
     }
 
     /** ── Display “create” form ───────────── */

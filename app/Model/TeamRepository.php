@@ -100,5 +100,4 @@ final class TeamRepository
             ->join('users', 'users.id = teams.owner_id')
             ->order('teams.id ASC');
     }
-
 }

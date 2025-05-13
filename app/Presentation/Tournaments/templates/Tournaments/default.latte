@@ -1,25 +1,60 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1>All Tournaments</h1>
-    {if $isAdmin}
-        <a n:href="create" class="btn btn-primary mb-3">Create Tournament</a>
-    {/if}
+    <div class="container py-4">
 
-    <div class="row">
-        {foreach $tournaments as $t}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{$t->logo}" class="card-img-top" style="height:200px; object-fit:cover">
-                    <div class="card-body">
-                        <h5 class="card-title">{$t->name}</h5>
-                        <p class="card-text">
-                            Starts at {$t->starts_at|date:'j. n. Y H:i'}
-                        </p>
-                        <a n:href="detail, id => $t->id" class="btn btn-sm btn-secondary">View</a>
+        <!-- Title & Create -->
+        <div class="text-center mb-4">
+            <h1 class="fw-bold display-5 text-white">
+                <i class="bi bi-trophy-fill me-2"></i>{$title}
+            </h1>
+            {if $isAdmin}
+                <a n:href="create" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>Create Tournament
+                </a>
+            {/if}
+        </div>
+
+        <!-- Tournament cards -->
+        <div class="row justify-content-center gy-4">
+            {foreach $tournaments as $t}
+                <div class="col-12 col-md-8 col-lg-5">
+                    <div class="card bg-dark text-white">
+                        <div class="row g-0 align-items-center">
+
+                            <!-- Left: text + button -->
+                            <div class="col-7 p-4">
+                                <h4 class="fw-semibold mb-3">{$t->name}</h4>
+                                <p class="mb-1">
+                                    <i class="bi bi-calendar-event me-2"></i>
+                                    {$t->starts_at|date:'j. n. Y'}
+                                </p>
+                                <p class="mb-4">
+                                    <i class="bi bi-clock me-2"></i>
+                                    {$t->starts_at|date:'H:i'}
+                                </p>
+                                <a
+                                        n:href="detail, id => $t->id"
+                                        class="btn btn-sm btn-primary"
+                                >
+                                    <i class="bi bi-eye-fill me-1"></i>View
+                                </a>
+                            </div>
+
+                            <!-- Right: circular logo -->
+                            <div class="col-4 d-flex justify-content-center">
+                                <img
+                                        src="{$basePath}{$t->logo}"
+                                        alt="{$t->name} logo"
+                                        class="rounded-circle"
+                                        style="width:170px; height:170px; object-fit:cover;"
+                                >
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        {/foreach}
+            {/foreach}
+        </div>
     </div>
 {/block}

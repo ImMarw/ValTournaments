@@ -1,20 +1,54 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1>{$title}</h1>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-white mb-4">
+                <i class="bi bi-chat-dots-fill me-2"></i>{$title}
+            </h1>
+            {if $user->isLoggedIn()}
+                <div class="text-end">
+                    <a n:href="Forum:create" class="btn btn-primary">
+                        <i class="bi bi-pencil-square me-1"></i>New Topic
+                    </a>
+                </div>
+            {/if}
+        </div>
 
-    <ul class="list-group">
+        <!-- Header “row” as a card -->
+        <div class="card bg-secondary text-white rounded-4 mb-2">
+            <div class="row g-0 fw-bold text-uppercase small">
+                <div class="col-6 col-md-6 px-4 py-2">Topic</div>
+                <div class="col-3 col-md-3 px-4 py-2">Created by</div>
+                <div class="col-3 col-md-3 px-4 py-2 text-end">Date</div>
+            </div>
+        </div>
+
+        <!-- Each post as its own dark card -->
         {foreach $topics as $t}
-            <li class="list-group-item">
-                <a n:href="Forum:topic, id => $t->id">{$t->title}</a>
-                <small class="text-muted">
-                    by {$t->ref('user')->username} on {$t->created_at|date:'j. n. Y H:i'}
-                </small>
-            </li>
-        {/foreach}
-    </ul>
+            <div class="card bg-dark text-white rounded-4 mb-3">
+                <div class="row g-0 align-items-center">
+                    <!-- Topic -->
+                    <div class="col-6 col-md-6 px-4 py-3">
+                        <a
+                                n:href="Forum:topic, id => $t->id"
+                                class="text-white text-decoration-none"
+                        >
+                            <i class="bi bi-chat-right-text-fill me-1"></i>{$t->title}
+                        </a>
+                    </div>
 
-    {if $user->isLoggedIn()}
-        <a n:href="Forum:create" class="btn btn-primary mt-3">New Topic</a>
-    {/if}
+                    <!-- Created by -->
+                    <div class="col-3 col-md-3 px-4 py-3 small">
+                        {$t->ref('user')->username}
+                    </div>
+
+                    <!-- Date -->
+                    <div class="col-3 col-md-3 px-4 py-3 small text-end">
+                        {$t->created_at|date:'j. n. Y H:i'}
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
 {/block}

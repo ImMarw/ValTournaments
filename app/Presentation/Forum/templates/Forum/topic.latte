@@ -1,18 +1,54 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
-    <h1>{$topic->title}</h1>
-    <small>Started by {$topic->ref('user')->username}</small>
-    {control replyForm}
+    <div class="container py-4">
 
-    <ul class="list-group my-4">
+        <!-- Topic Header Card -->
+        <div class="card bg-secondary text-white rounded-4 mb-4 p-4">
+            <h1 class="mb-1">
+                <i class="bi bi-chat-dots-fill me-2"></i>{$topic->title}
+            </h1>
+            <p class="mb-0 small text-white-50">
+                Started by <strong class="text-white">{$topic->ref('user')->username}</strong>
+                <span class="float-end text-white-50"><i class="bi bi-clock-fill me-1"></i>{$topic->created_at|date:'j. n. Y H:i'}</span>
+            </p>
+        </div>
+
+        <!-- Reply Form Card -->
+        <div class="card bg-dark text-white rounded-4 mb-4 p-4">
+            <form n:name="replyForm">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Your Reply</label>
+                    <textarea
+                            id="content"
+                        n:name="content"
+                        class="form-control bg-secondary text-white border-0 rounded-3"
+                            rows="3"
+                            required
+                    ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-reply-fill me-1"></i>Post Reply
+                </button>
+            </form>
+        </div>
+
+        <!-- Posts List -->
         {foreach $posts as $p}
-            <li class="list-group-item">
-                <p>{$p->content}</p>
-                <small class="text-muted">
-                    {$p->ref('user')->username} at {$p->created_at|date:'j. n. Y H:i'}
-                </small>
-            </li>
+            <div class="card bg-dark text-white rounded-4 mb-3 p-4">
+                <p class="mb-3 text-white">{$p->content}</p>
+                <div class="small">
+                    <span class="text-white">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <strong>{$p->ref('user')->username}</strong>
+                    </span>
+                    <span class="float-end text-white-50">
+                        <i class="bi bi-clock-fill me-1"></i>
+                        {$p->created_at|date:'j. n. Y H:i'}
+                    </span>
+                </div>
+            </div>
         {/foreach}
-    </ul>
+
+    </div>
 {/block}
