@@ -64,7 +64,6 @@ final class ForumPresenter extends Presenter
 
     protected function createComponentReplyForm(): Form
     {
-        $this->user->isLoggedIn() || $this->error(403);
 
         $form = new Form;
         $form->addTextArea('content', 'Your reply:')
