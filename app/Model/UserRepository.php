@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
+use Nette\Database\Table\ActiveRow;
 
 final class UserRepository
 {
@@ -43,5 +44,29 @@ final class UserRepository
             ->table('users')
             ->wherePrimary($id)
             ->update(['role' => $role]);
+    }
+
+    public function findByEmail(string $email): ?ActiveRow
+    {
+        return $this->db
+            ->table('users')
+            ->where('email', $email)
+            ->fetch();            // returns ActiveRow|null
+    }
+
+
+    public function findOneByMember(int $userId): ?ActiveRow
+    {
+        // start from teams table
+        $teams = $this->db
+            ->table('teams')
+            // bring in the pivot so we can filter on its user_id
+            ->innerJoin('team_members', 'team_members.team_id = teams.id');
+
+        return $teams
+            // match either owner_id or the joined team_members
+            ->where('(teams.owner_id = ? OR team_members.user_id = ?)', $userId, $userId)
+            ->limit(1)
+            ->fetch();
     }
 }

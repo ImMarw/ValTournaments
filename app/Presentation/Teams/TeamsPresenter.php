@@ -7,17 +7,21 @@ use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
 use App\Model\TeamRepository;
 use App\Model\InvitationRepository;
+use App\Model\UserRepository;
 
 final class TeamsPresenter extends Presenter
 {
     private TeamRepository $teams;
     private InvitationRepository $invites;
 
-    public function __construct(TeamRepository $teams, InvitationRepository $invites)
+    private UserRepository $users;
+
+    public function __construct(TeamRepository $teams, UserRepository $users, InvitationRepository $invites)
     {
         parent::__construct();
         $this->teams   = $teams;
         $this->invites = $invites;
+        $this->users = $users;
     }
 
     // ─────────── List all teams ─────────────────────────────────────────────
@@ -117,23 +121,23 @@ final class TeamsPresenter extends Presenter
         $this->template->isLoggedIn = $this->getUser()->isLoggedIn();
     }
 
-    // ─────────── “My Team” redirect ────────────────────────────────────────
     public function renderMyTeam(): void
     {
         if (! $this->getUser()->isLoggedIn()) {
-            $this->error(403);
+
         }
 
-        $this->template->title = 'My Team';
-        $team = $this->teams->fetchAll()
-            ->where('owner_id', (int)$this->getUser()->getId())
-            ->fetch();
+        $me   = (int) $this->getUser()->getId();
+        $team = $this->teams->findOneByMember($me);
 
-        if (! $team) {
-            $this->template->noTeam = true;
-        } else {
+        if ($team) {
+            // redirect straight to the detail page of that team
             $this->redirect('Teams:detail', $team->id);
         }
+
+        // if we get here, they really aren’t in any team
+        $this->template->title  = 'My Team';
+        $this->template->noTeam = true;
     }
 
     // ─────────── Invite form component ─────────────────────────────────────
@@ -143,11 +147,24 @@ final class TeamsPresenter extends Presenter
         $form->addText('email', 'Invite by email:')
             ->setType('email')
             ->setRequired();
-        // populate hidden teamId so insert isn’t zero
         $form->addHidden('teamId')
             ->setDefaultValue($this->getParameter('id'));
         $form->addSubmit('send', 'Send Invite');
         $form->onSuccess[] = function (Form $form, \stdClass $v): void {
+            // 1) Look up the user by email
+            $user = $this->users->findByEmail($v->email);
+            if (! $user) {
+                $this->flashMessage('No user with that email.', 'warning');
+                $this->redirect('this');
+            }
+
+            // 2) Check if they’re already on a team
+            if ($this->teams->userHasTeam($user->id)) {
+                $this->flashMessage('That user is already in a team.', 'warning');
+                $this->redirect('this');
+            }
+
+            // 3) Everything’s good, create the invite
             $this->invites->invite(
                 (int)$v->teamId,
                 $v->email,
@@ -156,8 +173,10 @@ final class TeamsPresenter extends Presenter
             $this->flashMessage('Invitation sent!', 'success');
             $this->redirect('this');
         };
+
         return $form;
     }
+
 
     // ─────────── Signal for removing a member ──────────────────────────────
     public function handleRemoveMember(int $teamId, int $userId): void
@@ -244,5 +263,12 @@ final class TeamsPresenter extends Presenter
         $this->teams->updateTeam($team->id, $update);
         $this->flashMessage('Team updated successfully.', 'success');
         $this->redirect('Teams:detail', $team->id);
+    }
+
+    public function userHasTeam(int $userId): bool
+    {
+        return (bool) $this->db->table('team_members')
+            ->where('user_id', $userId)
+            ->count();
     }
 }

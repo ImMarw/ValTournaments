@@ -1,6 +1,12 @@
 {layout '../../../templates/@layout.latte'}
 
 {block content}
+    {foreach $flashes as $flash}
+        <div class="alert alert-{$flash->type} alert-dismissible fade show rounded-3" role="alert">
+            {$flash->message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {/foreach}
     <div class="container py-5">
 
         <!-- Header: Logo, Name & Leader Badge in one line -->
@@ -73,9 +79,10 @@
                     </div>
                 </div>
             {/if}
-    </div>
+        </div>
 
-        <!-- Leave Team -->
+
+            <!-- Leave Team -->
         {if $isLoggedIn && in_array($user->getId(), array_map(fn($m)=>$m->id,$members)) && !$isOwner}
             <div class="text-center mt-4">
                 <a n:href="leaveTeam! teamId => $team->id"

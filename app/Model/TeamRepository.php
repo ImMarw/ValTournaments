@@ -14,12 +14,6 @@ final class TeamRepository
     public function __construct(private Explorer $db)
     {
     }
-
-    /**
-     * Get all teams (no joins, bare rows)
-     *
-     * @return Selection<int,ActiveRow>
-     */
     public function fetchAll(): Selection
     {
         return $this->db->table('teams')
@@ -99,5 +93,40 @@ final class TeamRepository
             ->select('teams.*, users.username AS owner_name')
             ->join('users', 'users.id = teams.owner_id')
             ->order('teams.id ASC');
+    }
+
+    public function userHasTeam(int $userId): bool
+    {
+        return (bool) $this->db
+            ->table('team_members')
+            ->where('user_id', $userId)
+            ->count();
+    }
+    public function findOneByMember(int $userId): ?ActiveRow
+    {
+        // 1) First, are they the owner?
+        $team = $this->db
+            ->table('teams')
+            ->where('owner_id', $userId)
+            ->fetch();
+
+        if ($team) {
+            return $team;
+        }
+
+        // 2) Otherwise, are they in team_members?
+        $pivot = $this->db
+            ->table('team_members')
+            ->where('user_id', $userId)
+            ->fetch();
+
+        if (! $pivot) {
+            return null;
+        }
+
+        // finally, load that team by its ID
+        return $this->db
+            ->table('teams')
+            ->get($pivot->team_id);
     }
 }
